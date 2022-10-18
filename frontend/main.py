@@ -1,18 +1,21 @@
 import logging
 import asyncio
 
+import bot
 from consumer import TelegramConsumer
 from producer import TelegramProducer
-from bot import bot_init, bot_run, dp
 
 logging.basicConfig(level=logging.INFO)
 
-in_queue = asyncio.Queue()
-out_queue = asyncio.Queue()
-
 loop = asyncio.new_event_loop()
-loop.create_task(TelegramProducer(loop).run(in_queue))
-loop.create_task(TelegramConsumer(loop).run(out_queue))
-bot_init(in_queue, out_queue)
-loop.create_task(bot_run())
+
+prod = TelegramProducer(loop)
+cons = TelegramConsumer(loop)
+
+bot.set_async_callback(prod.produce)
+cons.set_async_callback(bot.on_result)
+
+loop.create_task(prod.start())
+loop.create_task(cons.run())
+loop.create_task(bot.run())
 loop.run_forever()

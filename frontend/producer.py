@@ -1,4 +1,3 @@
-import asyncio
 import json
 
 from aiokafka import AIOKafkaProducer
@@ -11,16 +10,20 @@ class TelegramProducer:
             bootstrap_servers='localhost:9092',
         )
 
-    async def run(self, in_queue: asyncio.Queue):
+    async def start(self):
         await self._producer.start()
+
+    async def stop(self):
+        await self._producer.stop()
+
+    async def produce(self, topic: str, c_id: int, m_id: int, payload) -> None:
         try:
-            while True:
-                topic, chat_id, message_id, payload = await in_queue.get()
-                data = {
-                    'chat_id': chat_id,
-                    'message_id': message_id,
-                    'payload': payload
-                }
-                await self._producer.send_and_wait(topic, json.dumps(data).encode('utf-8'))
-        finally:
+            data = {
+                'chat_id': c_id,
+                'message_id': m_id,
+                'payload': payload
+            }
+            await self._producer.send_and_wait(topic, json.dumps(data).encode('utf-8'))
+        except Exception as e:
             await self._producer.stop()
+            raise e

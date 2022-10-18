@@ -1,6 +1,6 @@
-import asyncio
 import logging
-from asyncio import Queue
+from typing import Callable, Awaitable, Optional
+
 from aiogram import Bot, Dispatcher, types
 
 
@@ -8,8 +8,19 @@ with open('../token') as t_file:
     bot = Bot(token=t_file.read())
     dp = Dispatcher(bot)
 
-_in_queue: Queue
-_out_queue: Queue
+_callback_inner: Optional[Callable[[str, int, int, ...], Awaitable]] = None
+
+
+def set_async_callback(callback: Callable[[str, int, int, ...], Awaitable]):
+    global _callback_inner
+    _callback_inner = callback
+
+
+async def _callback(topic: str, c_id: int, m_id: int, payload) -> None:
+    if _callback_inner is None:
+        logging.warning('bot has no callback function set')
+        return
+    await _callback_inner(topic, c_id, m_id, payload)
 
 
 @dp.message_handler(commands=['start', 'help'])
@@ -25,7 +36,7 @@ async def on_sum_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
 
     nums = list(map(int, message.text.split()[1:]))
-    await _in_queue.put(('sum', message.chat.id, message.message_id, nums))
+    await _callback('sum', message.chat.id, message.message_id, nums)
 
 
 @dp.message_handler(commands=['product'])
@@ -33,25 +44,13 @@ async def on_product_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
 
     nums = list(map(int, message.text.split()[1:]))
-    await _in_queue.put(('product', message.chat.id, message.message_id, nums))
+    await _callback('product', message.chat.id, message.message_id, nums)
 
 
-async def _result_loop():
-    while True:
-        c_id, m_id, payload = await _out_queue.get()
-
-        logging.info(f'reply for {c_id}: {payload}')
-
-        await bot.send_message(c_id, payload, reply_to_message_id=m_id)
+async def on_result(c_id: int, m_id: int, payload) -> None:
+    logging.info(f'replying to {c_id}: {payload}')
+    await bot.send_message(c_id, payload, reply_to_message_id=m_id)
 
 
-def bot_init(in_queue: Queue, out_queue: Queue) -> None:
-    global _in_queue, _out_queue
-    _in_queue = in_queue
-    _out_queue = out_queue
-    return dp.loop
-
-
-async def bot_run() -> None:
-    asyncio.create_task(_result_loop())
+async def run() -> None:
     await dp.start_polling()

@@ -1,8 +1,12 @@
 import json
 import logging
-from typing import Callable, Awaitable
+from typing import Callable, Optional, Coroutine
 
 from aiokafka import AIOKafkaConsumer
+
+from common import PayloadMessage
+
+ConsumerCallback = Callable[[PayloadMessage], Coroutine]
 
 
 class TelegramConsumer:
@@ -13,7 +17,7 @@ class TelegramConsumer:
             bootstrap_servers='localhost:9092',
             enable_auto_commit=True
         )
-        self._callback = None
+        self._callback: Optional[ConsumerCallback] = None
 
     async def run(self):
         await self._consumer.start()
@@ -24,13 +28,9 @@ class TelegramConsumer:
                 if self._callback is None:
                     logging.warning('consumer has no callback function set')
                     continue
-                await self._callback(
-                    data['chat_id'],
-                    data['message_id'],
-                    data['payload']
-                )
+                await self._callback(data)
         finally:
             await self._consumer.stop()
 
-    def set_async_callback(self, callback: Callable[[int, int, ...], Awaitable]):
+    def set_async_callback(self, callback: ConsumerCallback):
         self._callback = callback

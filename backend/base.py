@@ -4,6 +4,8 @@ from typing import Callable
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
+from common import PayloadMessage
+
 
 async def main_loop(consumer_topic: str, producer_topic: str, payload_handler: Callable):
     consumer = AIOKafkaConsumer(
@@ -19,9 +21,9 @@ async def main_loop(consumer_topic: str, producer_topic: str, payload_handler: C
         await producer.start()
         while True:
             rec = await consumer.getone()
-            data = json.loads(rec.value.decode('utf-8'))
+            data: PayloadMessage = json.loads(rec.value.decode('utf-8'))
 
-            logging.info(f'handling request from {data["chat_id"]}: {data["payload"]}')
+            logging.info(f"handling request from {data['chat_id']}: {data['payload']}")
 
             data['payload'] = payload_handler(data['payload'])
             await producer.send_and_wait(producer_topic, json.dumps(data).encode('utf-8'))

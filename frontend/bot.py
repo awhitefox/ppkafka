@@ -33,7 +33,7 @@ async def _callback(topic: str, tg_msg: types.Message, payload) -> None:
 
 
 @dp.message_handler(commands=['start', 'help'])
-async def on_sum_command(message: types.Message):
+async def _on_help_command(message: types.Message):
     await message.answer('\n'.join((
         '/sum [x1] [x2] ... [xn]',
         '/product [x1] [x2] ... [xn]'
@@ -41,7 +41,7 @@ async def on_sum_command(message: types.Message):
 
 
 @dp.message_handler(commands=['sum'])
-async def on_sum_command(message: types.Message):
+async def _on_sum_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
 
     nums = list(map(int, message.text.split()[1:]))
@@ -49,7 +49,7 @@ async def on_sum_command(message: types.Message):
 
 
 @dp.message_handler(commands=['product'])
-async def on_product_command(message: types.Message):
+async def _on_product_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
 
     nums = list(map(int, message.text.split()[1:]))

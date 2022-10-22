@@ -19,7 +19,7 @@ class PayloadConsumer:
         )
         self._callback: Optional[ConsumerCallback] = None
 
-    async def run(self):
+    async def run(self) -> None:
         await self._consumer.start()
         try:
             while True:
@@ -32,5 +32,5 @@ class PayloadConsumer:
         finally:
             await self._consumer.stop()
 
-    def set_async_callback(self, callback: ConsumerCallback):
+    def set_async_callback(self, callback: ConsumerCallback) -> None:
         self._callback = callback

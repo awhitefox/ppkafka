@@ -16,7 +16,7 @@ with open('../token') as t_file:
 _callback_inner: Optional[BotCallback] = None
 
 
-def set_async_callback(callback: BotCallback):
+def set_async_callback(callback: BotCallback) -> None:
     global _callback_inner
     _callback_inner = callback
 

@@ -3,7 +3,7 @@ import logging
 from base import run
 
 
-def product(payload: list[int]):
+def product(payload: list[int]) -> int:
     r = 1
     for n in payload:
         r *= n

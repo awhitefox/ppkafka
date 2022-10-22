@@ -12,10 +12,10 @@ class PayloadProducer:
             bootstrap_servers='localhost:9092',
         )
 
-    async def start(self):
+    async def start(self) -> None:
         await self._producer.start()
 
-    async def stop(self):
+    async def stop(self) -> None:
         await self._producer.stop()
 
     async def produce(self, topic: str, msg: PayloadMessage) -> None:

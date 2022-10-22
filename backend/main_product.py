@@ -1,9 +1,6 @@
-import asyncio
 import logging
 
-from base import main_loop
-
-logging.basicConfig(level=logging.INFO)
+from base import run
 
 
 def product(payload: list[int]):
@@ -13,8 +10,6 @@ def product(payload: list[int]):
     return r
 
 
-loop = asyncio.new_event_loop()
-try:
-    loop.run_until_complete(main_loop('product', 'results', product))
-finally:
-    loop.close()
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    run('product', 'results', product)

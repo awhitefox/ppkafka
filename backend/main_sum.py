@@ -1,13 +1,8 @@
-import asyncio
 import logging
 
-from base import main_loop
-
-logging.basicConfig(level=logging.INFO)
+from base import run
 
 
-loop = asyncio.new_event_loop()
-try:
-    loop.run_until_complete(main_loop('sum', 'results', sum))
-finally:
-    loop.close()
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    run('sum', 'results', sum)

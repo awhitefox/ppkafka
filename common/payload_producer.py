@@ -2,10 +2,10 @@ import json
 
 from aiokafka import AIOKafkaProducer
 
-from common import PayloadMessage
+from . import PayloadMessage
 
 
-class TelegramProducer:
+class PayloadProducer:
     def __init__(self, loop):
         self._producer = AIOKafkaProducer(
             loop=loop,

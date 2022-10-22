@@ -1,32 +1,26 @@
-import json
+import asyncio
 import logging
 from typing import Callable
 
-from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
-
-from common import PayloadMessage
+from common import PayloadMessage, PayloadProducer, PayloadConsumer
 
 
-async def main_loop(consumer_topic: str, producer_topic: str, payload_handler: Callable):
-    consumer = AIOKafkaConsumer(
-        consumer_topic,
-        bootstrap_servers='localhost:9092',
-        enable_auto_commit=True
-    )
-    producer = AIOKafkaProducer(
-        bootstrap_servers='localhost:9092',
-    )
+def run(consumer_topic: str, producer_topic: str, payload_handler: Callable) -> None:
+    loop = asyncio.new_event_loop()
     try:
-        await consumer.start()
-        await producer.start()
-        while True:
-            rec = await consumer.getone()
-            data: PayloadMessage = json.loads(rec.value.decode('utf-8'))
+        producer = PayloadProducer(loop)
+        consumer = PayloadConsumer(loop, consumer_topic)
 
-            logging.info(f"handling request from {data['chat_id']}: {data['payload']}")
+        async def on_consume(msg: PayloadMessage) -> None:
+            logging.info(f"handling request from {msg['chat_id']}: {msg['payload']}")
 
-            data['payload'] = payload_handler(data['payload'])
-            await producer.send_and_wait(producer_topic, json.dumps(data).encode('utf-8'))
+            msg['payload'] = payload_handler(msg['payload'])
+            await producer.produce(producer_topic, msg)
+
+        consumer.set_async_callback(on_consume)
+        loop.run_until_complete(asyncio.gather(
+            loop.create_task(producer.start()),
+            loop.create_task(consumer.run())
+        ))
     finally:
-        await consumer.stop()
-        await producer.stop()
+        loop.close()

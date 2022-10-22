@@ -4,15 +4,15 @@ from typing import Callable, Optional, Coroutine
 
 from aiokafka import AIOKafkaConsumer
 
-from common import PayloadMessage
+from . import PayloadMessage
 
 ConsumerCallback = Callable[[PayloadMessage], Coroutine]
 
 
-class TelegramConsumer:
-    def __init__(self, loop):
+class PayloadConsumer:
+    def __init__(self, loop, topic: str):
         self._consumer = AIOKafkaConsumer(
-            'results',
+            topic,
             loop=loop,
             bootstrap_servers='localhost:9092',
             enable_auto_commit=True

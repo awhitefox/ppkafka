@@ -14,6 +14,7 @@ class PayloadConsumer:
         self._consumer = AIOKafkaConsumer(
             topic,
             loop=loop,
+            group_id='default',
             bootstrap_servers='localhost:9092',
             enable_auto_commit=True
         )

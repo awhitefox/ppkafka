@@ -1,6 +1,6 @@
 import asyncio
 
-import bot
+from . import bot
 from common import setup_logging, PayloadProducer, PayloadConsumer
 
 setup_logging('bot')

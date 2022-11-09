@@ -1,4 +1,4 @@
-from base import run
+from . import run
 from common import setup_logging
 
 

@@ -4,7 +4,7 @@ from io import BytesIO
 import requests
 from PIL import Image, ImageOps
 
-from base import run
+from . import run
 from common import setup_logging, try_load_dotenv
 
 POST_URL = 'https://api.imgbb.com/1/upload'

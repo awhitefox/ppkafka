@@ -1,10 +1,10 @@
-import logging
 import asyncio
 
 import bot
-from common import PayloadProducer, PayloadConsumer
+from common import setup_logging, PayloadProducer, PayloadConsumer
 
-logging.basicConfig(level=logging.INFO)
+setup_logging('bot')
+
 
 loop = asyncio.new_event_loop()
 try:

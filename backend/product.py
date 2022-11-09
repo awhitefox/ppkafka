@@ -1,6 +1,5 @@
-import logging
-
 from base import run
+from common import setup_logging
 
 
 def product(payload: list[int]) -> int:
@@ -11,5 +10,5 @@ def product(payload: list[int]) -> int:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    setup_logging('product')
     run('product', 'results', product)

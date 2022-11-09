@@ -1,19 +1,19 @@
-import json
 import logging
+import os
 from typing import Callable, Optional, Coroutine
 
 from aiogram import Bot, Dispatcher, types
+from aiogram.types import ContentType
 
-from common import PayloadMessage
+from common import try_load_dotenv, PayloadMessage
 
 BotCallback = Callable[[str, PayloadMessage], Coroutine]
-
-
-with open('../token') as t_file:
-    bot = Bot(token=t_file.read())
-    dp = Dispatcher(bot)
-
 _callback_inner: Optional[BotCallback] = None
+
+
+try_load_dotenv()
+bot = Bot(token=os.environ['TELEGRAM_TOKEN'])
+dp = Dispatcher(bot)
 
 
 def set_async_callback(callback: BotCallback) -> None:
@@ -56,11 +56,17 @@ async def _on_product_command(message: types.Message):
     await _callback('product', message, nums)
 
 
+@dp.message_handler(commands=['grayscale'], commands_ignore_caption=False, content_types=ContentType.PHOTO)
+async def _on_grayscale_command(message: types.Message):
+    logging.info(f'cmd from {message.chat.id}: {message.text}')
+    await _callback('grayscale', message, await message.photo[-1].get_url())
+
+
 async def on_result(msg: PayloadMessage) -> None:
     logging.info(f"replying to {msg['chat_id']}: {msg['payload']}")
     await bot.send_message(
         msg['chat_id'],
-        json.dumps(msg['payload']),
+        str(msg['payload']),
         reply_to_message_id=msg['message_id']
     )
 

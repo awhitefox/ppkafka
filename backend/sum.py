@@ -1,8 +1,6 @@
-import logging
-
 from base import run
-
+from common import setup_logging
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    setup_logging('sum')
     run('sum', 'results', sum)

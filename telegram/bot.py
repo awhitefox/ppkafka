@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import ContentType
 
 from common import try_load_dotenv, PayloadMessage
+from common.contants import TOPICS
 
 BotCallback = Callable[[str, PayloadMessage], Coroutine]
 _callback_inner: Optional[BotCallback] = None
@@ -45,7 +46,7 @@ async def _on_sum_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
 
     nums = list(map(int, message.text.split()[1:]))
-    await _callback('sum', message, nums)
+    await _callback(TOPICS.SUM, message, nums)
 
 
 @dp.message_handler(commands=['product'])
@@ -53,13 +54,13 @@ async def _on_product_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
 
     nums = list(map(int, message.text.split()[1:]))
-    await _callback('product', message, nums)
+    await _callback(TOPICS.PRODUCT, message, nums)
 
 
 @dp.message_handler(commands=['grayscale'], commands_ignore_caption=False, content_types=ContentType.PHOTO)
 async def _on_grayscale_command(message: types.Message):
     logging.info(f'cmd from {message.chat.id}: {message.text}')
-    await _callback('grayscale', message, await message.photo[-1].get_url())
+    await _callback(TOPICS.GRAYSCALE, message, await message.photo[-1].get_url())
 
 
 async def on_result(msg: PayloadMessage) -> None:

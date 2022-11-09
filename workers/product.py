@@ -1,5 +1,6 @@
 from . import run
 from common import setup_logging
+from common.contants import TOPICS
 
 
 def product(payload: list[int]) -> int:
@@ -10,5 +11,5 @@ def product(payload: list[int]) -> int:
 
 
 if __name__ == '__main__':
-    setup_logging('product')
-    run('product', 'results', product)
+    setup_logging(TOPICS.PRODUCT)
+    run(TOPICS.PRODUCT, product)

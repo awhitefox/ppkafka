@@ -2,6 +2,7 @@ import asyncio
 
 from . import bot
 from common import setup_logging, PayloadProducer, PayloadConsumer
+from common.contants import TOPICS
 
 setup_logging('bot')
 
@@ -9,7 +10,7 @@ setup_logging('bot')
 loop = asyncio.new_event_loop()
 try:
     prod = PayloadProducer(loop)
-    cons = PayloadConsumer(loop, 'results')
+    cons = PayloadConsumer(loop, TOPICS.RESULTS)
 
     bot.set_async_callback(prod.produce)
     cons.set_async_callback(bot.on_result)

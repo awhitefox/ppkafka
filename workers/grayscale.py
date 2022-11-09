@@ -6,11 +6,12 @@ from PIL import Image, ImageOps
 
 from . import run
 from common import setup_logging, try_load_dotenv
+from common.contants import TOPICS
 
 POST_URL = 'https://api.imgbb.com/1/upload'
 
 
-def product(payload: str) -> str:
+def grayscale(payload: str) -> str:
     tg_response = requests.get(payload)
 
     with BytesIO(tg_response.content) as src:
@@ -31,6 +32,6 @@ def product(payload: str) -> str:
 
 
 if __name__ == '__main__':
-    setup_logging('grayscale')
+    setup_logging(TOPICS.GRAYSCALE)
     try_load_dotenv()
-    run('grayscale', 'results', product)
+    run(TOPICS.GRAYSCALE, grayscale)

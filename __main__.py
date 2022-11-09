@@ -18,10 +18,10 @@ def main():
     args = parser.parse_args()
 
     ps = (
-        *run('frontend', 1),
-        *run('backend.sum', args.sum),
-        *run('backend.product', args.product),
-        *run('backend.grayscale', args.grayscale),
+        *run('telegram', 1),
+        *run('workers.sum', args.sum),
+        *run('workers.product', args.product),
+        *run('workers.grayscale', args.grayscale),
     )
     print('Running!')
     for p in ps:

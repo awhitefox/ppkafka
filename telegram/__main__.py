@@ -1,8 +1,12 @@
+import os
+import sys
 import asyncio
 
-from . import bot
-from common import setup_logging, PayloadProducer, PayloadConsumer
-from common.contants import TOPICS
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
+from telegram import bot  # noqa: E402
+from common import setup_logging, PayloadProducer, PayloadConsumer  # noqa: E402
+from common.contants import TOPICS  # noqa: E402
 
 setup_logging('bot')
 

@@ -1,12 +1,15 @@
 import os
+import sys
 from io import BytesIO
 
 import requests
 from PIL import Image, ImageOps
 
-from . import run
-from common import setup_logging, try_load_dotenv
-from common.contants import TOPICS
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
+from workers._base import run  # noqa: E402
+from common import setup_logging, try_load_dotenv  # noqa: E402
+from common.contants import TOPICS  # noqa: E402
 
 POST_URL = 'https://api.imgbb.com/1/upload'
 

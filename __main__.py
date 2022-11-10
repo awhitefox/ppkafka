@@ -1,3 +1,4 @@
+import os
 import sys
 from subprocess import Popen, PIPE, STDOUT
 
@@ -17,6 +18,7 @@ def main():
     parser.add_argument('--grayscale', type=int, default=0, choices=range(0, 32))
     args = parser.parse_args()
 
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     ps = (
         *run('telegram', 1),
         *run('workers.sum', args.sum),
@@ -26,6 +28,8 @@ def main():
     print('Running!')
     for p in ps:
         p.wait()
+        print(f'[{" ".join(p.args)}] exited with code {p.returncode}')
+    print('Exit.')
 
 
 if __name__ == '__main__':

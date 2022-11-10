@@ -13,6 +13,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('--presenter', type=int, default=0, choices=range(0, 32))
     parser.add_argument('--sum', type=int, default=0, choices=range(0, 32))
     parser.add_argument('--product', type=int, default=0, choices=range(0, 32))
     parser.add_argument('--grayscale', type=int, default=0, choices=range(0, 32))
@@ -20,10 +21,10 @@ def main():
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     ps = (
-        *run('presenter', 1),
+        *run('presenter', args.presenter),
         *run('workers.sum', args.sum),
         *run('workers.product', args.product),
-        *run('workers.grayscale', args.grayscale),
+        *run('workers.grayscale', args.grayscale)
     )
     print('Running!')
     for p in ps:

@@ -3,7 +3,7 @@ import logging
 from typing import Callable
 
 from common import PayloadMessage, PayloadProducer, PayloadConsumer
-from common.contants import TOPICS
+from common.constants import TOPICS
 
 
 def run(consumer_topic: str, payload_handler: Callable) -> None:

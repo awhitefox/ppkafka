@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import ContentType
 
 from common import try_load_dotenv, PayloadMessage
-from common.contants import TOPICS
+from common.constants import TOPICS
 
 BotCallback = Callable[[str, PayloadMessage], Coroutine]
 _callback_inner: Optional[BotCallback] = None

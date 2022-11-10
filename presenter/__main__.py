@@ -4,7 +4,7 @@ import asyncio
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
-from telegram import bot  # noqa: E402
+from presenter import bot  # noqa: E402
 from common import setup_logging, PayloadProducer, PayloadConsumer  # noqa: E402
 from common.constants import TOPICS  # noqa: E402
 

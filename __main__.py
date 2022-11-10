@@ -20,7 +20,7 @@ def main():
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     ps = (
-        *run('telegram', 1),
+        *run('presenter', 1),
         *run('workers.sum', args.sum),
         *run('workers.product', args.product),
         *run('workers.grayscale', args.grayscale),

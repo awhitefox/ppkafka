@@ -13,10 +13,10 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--presenter', type=int, default=0, choices=range(0, 32))
     parser.add_argument('--sum', type=int, default=0, choices=range(0, 32))
     parser.add_argument('--product', type=int, default=0, choices=range(0, 32))
     parser.add_argument('--grayscale', type=int, default=0, choices=range(0, 32))
+    parser.add_argument('--presenter', type=int, default=0, choices=range(0, 32))
     args = parser.parse_args()
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))

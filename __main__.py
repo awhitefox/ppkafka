@@ -21,10 +21,10 @@ def main():
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     ps = (
-        *run('presenter', args.presenter),
         *run('workers.sum', args.sum),
         *run('workers.product', args.product),
-        *run('workers.grayscale', args.grayscale)
+        *run('workers.grayscale', args.grayscale),
+        *run('presenter', args.presenter)
     )
     print('Running!')
     for p in ps:

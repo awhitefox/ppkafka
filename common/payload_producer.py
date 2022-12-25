@@ -1,4 +1,5 @@
 import json
+import os
 
 from aiokafka import AIOKafkaProducer
 
@@ -9,7 +10,7 @@ class PayloadProducer:
     def __init__(self, loop):
         self._producer = AIOKafkaProducer(
             loop=loop,
-            bootstrap_servers='localhost:9092',
+            bootstrap_servers=f'{os.getenv("BOOTSTRAP_SERVER")}:9092',
         )
 
     async def start(self) -> None:

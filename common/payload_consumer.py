@@ -1,9 +1,9 @@
 import json
 import logging
+import os
 from typing import Callable, Optional, Coroutine
 
 from aiokafka import AIOKafkaConsumer
-
 from . import PayloadMessage
 
 ConsumerCallback = Callable[[PayloadMessage], Coroutine]
@@ -15,7 +15,7 @@ class PayloadConsumer:
             topic,
             loop=loop,
             group_id='default',
-            bootstrap_servers='localhost:9092',
+            bootstrap_servers=f'{os.getenv("BOOTSTRAP_SERVER")}:9092',
             enable_auto_commit=True
         )
         self._callback: Optional[ConsumerCallback] = None
